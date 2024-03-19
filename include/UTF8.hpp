@@ -4,7 +4,7 @@
 #include "mbstate.hpp"
 
 std::size_t 
-CharLength(const charUTF8_t*);
+CharLength(const charUTF8_t*, const std::size_t&);
 
 std::size_t 
 UTF8toUTF16(const charUTF8_t*, charUTF16_t*, conversionstate_t*, const std::size_t&);
