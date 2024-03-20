@@ -22,11 +22,11 @@ typedef uint_least32_t charUTF32_t;
 #define _WIDE_CHAR_
 
 #ifdef __linux__
-typedef charUTF32_t widechar_t;
+typedef uint_least32_t widechar_t;
 #endif /*__linux__*/
 
 #ifdef _WIN32
-typedef charUTF16_t widechar_t;
+typedef uint_least16_t widechar_t;
 #endif /*_WIN32*/
 
 #endif /*_WIDE_CHAR_*/
