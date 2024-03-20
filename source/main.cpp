@@ -19,6 +19,6 @@ int main (int argc, char *argv[]) {
         cin >> caracter[i];
 
     cout << "El tamaño es: " << CharLength(caracter, size) << endl;
-
+    cout << "Para el caracter: " << caracter << endl;
     return 0;
 }

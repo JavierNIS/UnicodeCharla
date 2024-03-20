@@ -49,7 +49,9 @@ UTF8toUTF16(const charUTF8_t* src, charUTF16_t* dest, conversionstate_t* conver,
                 return 0;
             return 4;
             break;
-            
+    }
+    return 0;
+}
 
 std::size_t 
 UTF8toUTF32(const charUTF8_t* src, charUTF32_t* dest, conversionstate_t* conver, const std::size_t& max);
