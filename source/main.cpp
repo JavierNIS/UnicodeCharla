@@ -19,8 +19,11 @@ int main (int argc, char *argv[]) {
         cin >> caracter[i];
 
     size_t tamañoreal = CharLength(caracter, size);
+
+    cout << "Para el caracter: " << caracter << endl;
     cout << "El tamaño es: " << tamañoreal << endl << endl;
-    
+
+
     charUTF16_t* utf16caracter = 0;
     if(tamañoreal == 4)
         utf16caracter = new charUTF16_t[2];

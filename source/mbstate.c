@@ -1,4 +1,4 @@
-#include "mbstate.hpp"
+#include "mbstate.h"
 
 void Initialize(conversionstate_t* conver){
     conver->mbchar = nullptr;

@@ -1,7 +1,9 @@
 #ifndef _MBSTATE_
 #define _MBSTATE_
 
-#include <cstdint>
+#include <stdint.h>
+
+#include <stddef.h>
 
 #ifndef _UTF8_CHAR_
 #define _UTF8_CHAR_
