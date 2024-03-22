@@ -1,6 +1,6 @@
 #include <iostream>
-#include "UTF8.hpp"
-#include "mbstate.hpp"
+#include "UTF8.h"
+#include "mbstate.h"
 
 using namespace std;
 
