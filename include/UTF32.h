@@ -1,17 +1,17 @@
-#ifndef __UTF32_CONVERSION__
-#define __UTF32_CONVERSION__
+#ifndef UTF32_CONVERSION
+#define UTF32_CONVERSION
 
 #include "mbstate.h"
 
-size_t 
-UTF32toUTF8(const charUTF32_t* src, charUTF8_t* dest, conversionstate_t* conver, const size_t& max);
+mbsize_t 
+UTF32toUTF8(const charUTF32_t* src, charUTF8_t* dest, conversionInfo_t* conver, const mbsize_t max);
 
-size_t 
-UTF32toUTF16(const charUTF32_t* src, charUTF16_t* dest, conversionstate_t* conver, const size_t& max);
+mbsize_t 
+UTF32toUTF16(const charUTF32_t* src, charUTF16_t* dest, conversionInfo_t* conver, const mbsize_t max);
 
 #ifdef _WIN32
-size_t 
-UTF32toWIDE(const charUTF32_t*, widechar_t*, conversionstate_t*, const size_t&);
+mbsize_t 
+UTF32toWIDE(const charUTF32_t*, widechar_t*, conversionInfo_t*, const mbsize_t&);
 #endif /*_WIN32*/
 
-#endif /*__UTF32_CONVERSION__*/
+#endif /*UTF32_CONVERSION*/
