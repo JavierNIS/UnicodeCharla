@@ -1,4 +1,5 @@
 #include "UTF8.h"
+#include "mbstate.h"
 
 mbsize_t 
 CharLength(const charUTF8_t* src, conversionInfo_t* conver){
@@ -26,6 +27,7 @@ UTF8toUTF16(const charUTF8_t* src, charUTF16_t* dest, conversionInfo_t* conver, 
         return 0;
     switch (CharLength(src, conver)){
         case 0:
+            SetError(conver, (charUTF8_t*)src);
             return 0;
             break;
         case 1:
@@ -48,6 +50,7 @@ UTF8toUTF16(const charUTF8_t* src, charUTF16_t* dest, conversionInfo_t* conver, 
                         (src[0] & 0x0F) << 12);
                 return 3;
             }
+            break;
         case 4:
             if(max == 4){
                 dest[1] = ( 0xDC00 | 
@@ -61,6 +64,7 @@ UTF8toUTF16(const charUTF8_t* src, charUTF16_t* dest, conversionInfo_t* conver, 
             } 
             break;
     }
+    SetError(conver, (charUTF8_t*)src);
     return 0;
 }
 
@@ -106,6 +110,7 @@ UTF8toUTF32(const charUTF8_t* src, charUTF32_t* dest, conversionInfo_t* conver, 
             }
             break;
     }
+    SetError(conver, (charUTF8_t*)src);
     return 0;
 }
                         

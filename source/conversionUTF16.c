@@ -1,4 +1,5 @@
 #include "UTF16.h"
+#include "mbstate.h"
 
 /*
 mbsize_t 
@@ -36,7 +37,14 @@ CharLength16(const charUTF16_t* src, conversionInfo_t* conver){
 
 mbsize_t 
 UTF16toUTF8(const charUTF16_t* src, charUTF8_t* dest, conversionInfo_t* conver, const mbsize_t max){
-    return 0;
+    if(src == 0 || dest == 0)
+        return 0;
+    mbsize_t utf16size = CharLength16(src, conver);
+    if(conver->_state == BAD)
+        return 0;
+    else if(conver->_endianness == BIG_ENDIAN){
+
+
 }
 
 mbsize_t 
