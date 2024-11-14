@@ -3,6 +3,9 @@
 
 #include "mbstate.h"
 
+void
+SwapEndiannessU32(charUTF32_t* src);
+
 mbsize_t 
 UTF32toUTF8(const charUTF32_t* src, charUTF8_t* dest, conversionInfo_t* conver, const mbsize_t max);
 

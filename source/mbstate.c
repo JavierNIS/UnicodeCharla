@@ -6,7 +6,7 @@ void Initialize(conversionInfo_t* conver){
   conver->_endianness = BIG_ENDIAN;
 }
 
-void SetError(conversionInfo_t* conver, charUTF8_t* badmb){
+void SetError(conversionInfo_t* conver, void* badmb){
   conver->_mbchar=badmb;
   conver->_state=BAD;
 }

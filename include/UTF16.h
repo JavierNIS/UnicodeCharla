@@ -3,6 +3,8 @@
 
 #include "mbstate.h"
 
+void
+SwapEndiannessU16(charUTF16_t* src);
 
 mbsize_t 
 CharLength16(const charUTF16_t* src, conversionInfo_t* conver);

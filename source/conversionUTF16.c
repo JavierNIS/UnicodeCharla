@@ -1,7 +1,14 @@
 #include "UTF16.h"
+#include "UTF32.h"
 #include "mbstate.h"
 #include <stdint.h>
-#include <stdlib.h>
+
+void
+SwapEndiannessU16(charUTF16_t* src){
+  charUTF16_t auxiliar = src[0];
+  src[0] = src[1];
+  src[1] = auxiliar;
+}
 
 mbsize_t 
 CharLength16(const charUTF16_t* src, conversionInfo_t* conver){
@@ -17,7 +24,7 @@ CharLength16(const charUTF16_t* src, conversionInfo_t* conver){
   if(conver->_endianness == BIG_ENDIAN){
     //Subrogado alto, entre 0xD800 y 0xDBFF
     //El segundo debe de estar entre 0xDC00 y 0xDFFF
-    if(0xD801 <= *src && 
+    if(0xD800 <= *src && 
         *src <= 0xDBFF)
       if(0xDC00 <= *(src+1) &&
           *(src+1) <= 0xDFFF) return 2; 
@@ -28,26 +35,9 @@ CharLength16(const charUTF16_t* src, conversionInfo_t* conver){
       if(0xD800 <= *(src+1) &&
           *(src+1) <= 0xDBFF) return 2;
   }
-  conver->_state = BAD;
+  SetError(conver, (void*)src); 
   return 0;
 }
-
-mbsize_t 
-CharLength16inUTF8B(const charUTF16_t* src, conversionInfo_t* conver){
-  if(src == 0 || conver->_state == BAD)
-    return 0;
-  else if(*src <= 0x7F)
-    return 1;
-  else if(*src <= 0x7FF)
-    return 2;
-  else if(*src <= 0xFFFF)
-    return 3;
-  else if(CharLength16(src, conver) == 2)
-    return 4;
-  else
-    return 0;
-}
-
 
 mbsize_t 
 UTF16toUTF8(const charUTF16_t* src, charUTF8_t* dest, conversionInfo_t* conver, const mbsize_t max){
@@ -55,54 +45,38 @@ UTF16toUTF8(const charUTF16_t* src, charUTF8_t* dest, conversionInfo_t* conver, 
     return 0;
   
   mbsize_t u16_cp_size = CharLength16(src, conver);
-  mbsize_t u8_cp_bytes = 0;
+  if(u16_cp_size > max)
+    u16_cp_size = 0;
   switch(u16_cp_size){
     case 1:
-      if (*src < 0x80 && max >= 1){
-        u8_cp_bytes = 1;
+      if (*src < 0x80){
         *dest = *src;
-      }else if (*src < 0x800 && max >= 2){
-        u8_cp_bytes = 2;
+      }else if (*src < 0x800){
         dest[0] = (0xC0 | ((*src & 0x7C) >> 6));
         dest[1] = (0x80 | (*src & 0x3F));
-      }else if (*src < 0xFFFF && max >= 3){
-        u8_cp_bytes = 3;
+      }else{
         dest[0] = (0xE0 | ((*src & 0xF000) >> 12));
         dest[1] = (0x80 | ((*src & 0xFC) >> 6));
         dest[2] = (0x80 | (*src & 0x3F));
-      }else {
-        conver->_state = BAD;
       }
       break;
     case 2:
-      if(max == 4){
-        u8_cp_bytes = 4;
-        uint8_t conversion_auxiliar = 0;
-        if ( conver->_endianness == BIG_ENDIAN){
-          conversion_auxiliar = (*src & 0x03C) + 1;
-          dest[0] = (0xF0 | (conversion_auxiliar & 0x1C));
-          dest[1] = (0x80 | ((conversion_auxiliar & 0x03) << 4));
-          dest[1] = (dest[1] | (*src & 0x3C));
-          dest[2] = (0x80 | ((*src & 0x3) << 4));
-          dest[2] = (dest[2] | ((src[1] & 0x03C0) >> 6));
-          dest[3] = (0x80 | (src[1] & 0x3F));
-        }else{
-          conversion_auxiliar = (src[1] & 0x03C) + 1;
-          dest[0] = (0xF0 | (conversion_auxiliar & 0x1C));
-          dest[1] = (0x80 | ((conversion_auxiliar & 0x03) << 4));
-          dest[1] = (dest[1] | (src[1] & 0x3C));
-          dest[2] = (0x80 | ((src[1] & 0x3) << 4));
-          dest[2] = (dest[2] | ((*src & 0x03C0) >> 6));
-          dest[3] = (0x80 | (*src & 0x3F));
-        }
-      }else {
-        conver->_state = BAD;
-      }
+      {}
+      charUTF16_t srcBE[2] = {src[0], src[1]};
+      if(conver->_endianness == LITTLE_ENDIAN)
+        SwapEndiannessU16(srcBE);
+      uint8_t conversion_auxiliar = (srcBE[0] & 0x03C) + 1;
+      dest[0] = (0xF0 | (conversion_auxiliar & 0x1C));
+      dest[1] = (0x80 | ((conversion_auxiliar & 0x03) << 4));
+      dest[1] = (dest[1] | (srcBE[0] & 0x3C));
+      dest[2] = (0x80 | ((srcBE[0] & 0x3) << 4));
+      dest[2] = (dest[2] | ((srcBE[1] & 0x03C0) >> 6));
+      dest[3] = (0x80 | (srcBE[1] & 0x3F));
       break;
-    case 0:
-      conver->_state = BAD;
+    default:
+      SetError(conver, (void*)src);
   }
-  return u8_cp_bytes;
+  return u16_cp_size;
 }
 
 mbsize_t 
@@ -110,33 +84,22 @@ UTF16toUTF32(const charUTF16_t* src, charUTF32_t* dest, conversionInfo_t* conver
   if(src == 0 || dest == 0 || conver->_state == BAD)
     return 0;
   mbsize_t u16_cp_size = CharLength16(src, conver);
+  if(u16_cp_size > max)
+    u16_cp_size = 0;
   switch (u16_cp_size) {
     case 1:
-      if(max >= 1){
-        *dest = *src;
-        if(conver->_endianness == BIG_ENDIAN)
-          *dest = (*dest << 16);
-        return 1;
-      }
+      *dest = *src;
       break;
     case 2:
-      if(max == 2){
-        charUTF32_t destBE = 
-          (((src[0] & 0x03ff) << 10) |
-           (src[1] & 0x03ff));
-        if(conver->_endianness == BIG_ENDIAN)
-          *dest = destBE;
-        else{
-          *dest = (((destBE >> 24) & 0x000000ff) | //3th byte to 0th
-              ((destBE << 8) & 0x00ff0000) | //1th byte to 2th
-              ((destBE >> 8) & 0x0000ff00) | //2th byte to 1th
-              ((destBE << 24) & 0xff000000)); //0th byte to 3th
-        }
-        return 2;
-      }
+      {}
+      charUTF32_t destBE = 
+        (((src[0] & 0x03ff) << 10) |
+         (src[1] & 0x03ff));
+      if(conver->_endianness == LITTLE_ENDIAN)
+        SwapEndiannessU32(&destBE);
+      *dest = destBE;
       break;
   }
-  conver->_state = BAD;
   return 0;
 }
 

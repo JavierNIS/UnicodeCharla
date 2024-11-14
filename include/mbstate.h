@@ -1,6 +1,5 @@
 #ifndef _MBSTATE_
 #define _MBSTATE_
-
 #include <stdint.h> //for least types
 
 
@@ -47,13 +46,13 @@ typedef uint8_t mbsize_t;
 
 
 typedef struct{
-  charUTF8_t* _mbchar;
+  void* _mbchar;
   uint8_t _state : 1;
   uint8_t _endianness : 1;    
 } conversionInfo_t;
 
 void Initialize(conversionInfo_t* conver);
-void SetError(conversionInfo_t* conver, charUTF8_t* badmb);
+void SetError(conversionInfo_t* conver, void* badmb);
 void SetEndiannes(conversionInfo_t* conver, const uint8_t endiannes);
 void Reset(conversionInfo_t* conver);
 
