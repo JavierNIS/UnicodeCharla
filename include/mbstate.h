@@ -47,9 +47,9 @@ typedef uint8_t mbsize_t;
 
 
 typedef struct{
-    charUTF8_t* _mbchar;
-    uint8_t _state : 1;
-    uint8_t _endianness : 1;    
+  charUTF8_t* _mbchar;
+  uint8_t _state : 1;
+  uint8_t _endianness : 1;    
 } conversionInfo_t;
 
 void Initialize(conversionInfo_t* conver);
