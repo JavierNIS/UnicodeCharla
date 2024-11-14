@@ -52,11 +52,11 @@ UTF16toUTF8(const charUTF16_t* src, charUTF8_t* dest, conversionInfo_t* conver, 
       if (*src < 0x80){
         *dest = *src;
       }else if (*src < 0x800){
-        dest[0] = (0xC0 | ((*src & 0x7C) >> 6));
+        dest[0] = (0xC0 | ((*src & 0x7C0) >> 6));
         dest[1] = (0x80 | (*src & 0x3F));
       }else{
         dest[0] = (0xE0 | ((*src & 0xF000) >> 12));
-        dest[1] = (0x80 | ((*src & 0xFC) >> 6));
+        dest[1] = (0x80 | ((*src & 0xFC0) >> 6));
         dest[2] = (0x80 | (*src & 0x3F));
       }
       break;
@@ -98,9 +98,8 @@ UTF16toUTF32(const charUTF16_t* src, charUTF32_t* dest, conversionInfo_t* conver
       if(conver->_endianness == LITTLE_ENDIAN)
         SwapEndiannessU32(&destBE);
       *dest = destBE;
-      break;
-  }
-  return 0;
+      }
+  return u16_cp_size;
 }
 
 #ifdef __linux__

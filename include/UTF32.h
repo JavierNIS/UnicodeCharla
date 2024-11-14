@@ -3,6 +3,9 @@
 
 #include "mbstate.h"
 
+mbsize_t
+UTF32mbLength(const charUTF32_t* src);
+
 void
 SwapEndiannessU32(charUTF32_t* src);
 
