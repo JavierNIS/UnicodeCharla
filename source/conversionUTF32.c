@@ -1,3 +1,4 @@
+#include "UTF16.h"
 #include "UTF32.h"
 #include "mbstate.h"
 
@@ -13,6 +14,13 @@ UTF32mbLength(const charUTF32_t* src){
   else
     u8_cp_length = 4;
   return u8_cp_length;
+}
+
+mbsize_t
+UTF32bytesToUTF16(const charUTF32_t* src){
+  mbsize_t u16_cp_length = 0;
+  u16_cp_length = *src <= 0xFFFF ? 1 : 2;
+  return u16_cp_length;
 }
 
 void
@@ -67,10 +75,34 @@ mbsize_t
 UTF32toUTF16(const charUTF32_t* src, charUTF16_t* dest, conversionInfo_t* conver, const mbsize_t max){
   if(src == 0 || dest == 0 || conver->_state == BAD)
     return 0;
-  mbsize_t u16_cp_length = UTF32mbLength(charUTF32_t *src)
+  mbsize_t u16_cp_length = UTF32bytesToUTF16(src);
+  if(u16_cp_length > max)
+    u16_cp_length = 0;
+  switch (u16_cp_length){
+    case 1:
+      *dest = *src;
+      break;
+    case 2:
+      {}
+      charUTF32_t code_point = *src;
+      if(conver->_endianness == LITTLE_ENDIAN)
+        SwapEndiannessU32(&code_point);
+      code_point-= 0x10000;
+      dest[0] = ( 0xD800 | ((0x001FFC00 & code_point) >> 10));
+      dest[1] = ( 0xDC00 | (0x000003FF & code_point));
+      if(conver->_endianness == LITTLE_ENDIAN)
+        SwapEndiannessU16(dest);
+      break;
+    default:
+      SetError(conver, (void*)src);
+      break;
+  }
+  return u16_cp_length;
 }
 
 #ifdef _WIN32
 mbsize_t 
-UTF32toWIDE(const charUTF32_t*, widechar_t*, conversionInfo_t*, const mbsize_t&);
+UTF32toWIDE(const charUTF32_t* src, widechar_t* dest, conversionInfo_t* conver, const mbsize_t& max){
+  return (UTF32toUTF16(src, dest, conver, max));
+}
 #endif /*_WIN32*/
