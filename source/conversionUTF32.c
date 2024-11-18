@@ -1,6 +1,4 @@
-#include "UTF16.h"
 #include "UTF32.h"
-#include "mbstate.h"
 
 mbsize_t
 UTF32mbLength(const charUTF32_t* src){
@@ -31,6 +29,7 @@ SwapEndiannessU32(charUTF32_t* src){
       ((auxiliar >> 8) & 0x0000ff00) | //2th byte to 1th
       ((auxiliar << 24) & 0xff000000)); //0th byte to 3th
 }
+
 mbsize_t 
 UTF32toUTF8(const charUTF32_t* src, charUTF8_t* dest, conversionInfo_t* conver, const mbsize_t max){
   if(src == 0 || dest == 0 || conver->_state == BAD)
@@ -59,7 +58,7 @@ UTF32toUTF8(const charUTF32_t* src, charUTF8_t* dest, conversionInfo_t* conver, 
     case 4:
       dest[0] = (0xF0 | ((srcBE & 0x1C0000) >> 18));
       dest[1] = (0x80 | ((srcBE & 0x030000) >> 12));
-      dest[1] = (0x80 | ((srcBE & 0xF000) >> 12));
+      dest[1] = (dest[1] | ((srcBE & 0xF000) >> 12));
       dest[2] = (0x80 | ((srcBE & 0xFC0) >> 6));
       dest[3] = (0x80 | (srcBE & 0x3F));
       break;

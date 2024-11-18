@@ -1,10 +1,7 @@
 #ifndef UTF16_CONVERSION
 #define UTF16_CONVERSION
 
-#include "mbstate.h"
-
-void
-SwapEndiannessU16(charUTF16_t* src);
+#include "unicode_common.h"
 
 mbsize_t 
 CharLength16(const charUTF16_t* src, conversionInfo_t* conver);

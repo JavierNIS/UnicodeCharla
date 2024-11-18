@@ -1,7 +1,7 @@
 #ifndef UTF8_CONVERSION
 #define UTF8_CONVERSION
 
-#include "mbstate.h"
+#include "unicode_common.h"
 
 mbsize_t 
 CharLength(const charUTF8_t* src, conversionInfo_t* conver);

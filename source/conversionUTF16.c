@@ -1,7 +1,4 @@
 #include "UTF16.h"
-#include "UTF32.h"
-#include "mbstate.h"
-#include <stdint.h>
 
 void
 SwapEndiannessU16(charUTF16_t* src){

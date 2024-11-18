@@ -1,16 +1,13 @@
 #ifndef UTF32_CONVERSION
 #define UTF32_CONVERSION
 
-#include "mbstate.h"
+#include "unicode_common.h"
 
 mbsize_t
 UTF32mbLength(const charUTF32_t* src);
 
 mbsize_t
 UTF32bytesToUTF16(const charUTF32_t* src);
-
-void
-SwapEndiannessU32(charUTF32_t* src);
 
 mbsize_t 
 UTF32toUTF8(const charUTF32_t* src, charUTF8_t* dest, conversionInfo_t* conver, const mbsize_t max);

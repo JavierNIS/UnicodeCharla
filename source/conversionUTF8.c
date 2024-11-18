@@ -1,7 +1,4 @@
-#include "UTF32.h"
-#include "UTF16.h"
 #include "UTF8.h"
-#include "mbstate.h"
 
 mbsize_t 
 CharLength(const charUTF8_t* src, conversionInfo_t* conver){
