@@ -1,4 +1,5 @@
 #include "UTF16.h"
+#include <stdio.h>
 
 void
 SwapEndiannessU16(charUTF16_t* src){
@@ -13,7 +14,7 @@ CharLength16(const charUTF16_t* src, conversionInfo_t* conver){
     return 0;
   //Primero se asume que el code point no es un par subrogado de UTF-16
   //En cuyo caso, los code points validos son U+0000 a U+D7FF y U+E000 a U+FFFF 
-  if(*src < 0xD800 || *src > 0xE000) return 1; 
+  if(*src < 0xD800 || *src > 0xDF00) return 1; 
 
   /*En caso de que esta condición no se cumpla, hay que comprobar si estamos
   en big endian o en little endian. En cuyo caso lo que cambia es el orden
@@ -91,7 +92,7 @@ UTF16toUTF32(const charUTF16_t* src, charUTF32_t* dest, conversionInfo_t* conver
       {}
       charUTF32_t destBE = 
         (((src[0] & 0x03ff) << 10) |
-         (src[1] & 0x03ff));
+         (src[1] & 0x03ff)) + 0x10000;
       if(conver->_endianness == LITTLE_ENDIAN)
         SwapEndiannessU32(&destBE);
       *dest = destBE;

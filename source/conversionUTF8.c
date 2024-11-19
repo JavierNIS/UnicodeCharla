@@ -3,14 +3,15 @@
 mbsize_t 
 CharLength(const charUTF8_t* src, conversionInfo_t* conver){
   if(src == 0 || conver->_state == BAD)
-    return 0;
-  else if((*src & 0x80) == 0x0) //Code point of one byte
+    return 0;;
+  if((*src & 0x80) == 0x0) //Code point of one byte
     return 1;
-  else if((*src & 0xF0) == 0xC0) //Two bytes
+  charUTF8_t srcAux = *src & 0xF0;
+  if(srcAux == 0xC0 || srcAux == 0xD0) //Two bytes
     return 2;
-  else if((*src & 0xF0) == 0xE0) //Three bytes
+  else if(srcAux == 0xE0) //Three bytes
     return 3;
-  else if((*src & 0xF0) == 0xF0) //Four bytes
+  else if(srcAux == 0xF0) //Four bytes
     return 4;
   else{
     SetError(conver, (void*)src);

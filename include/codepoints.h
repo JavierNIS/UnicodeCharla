@@ -6,8 +6,8 @@
 #define UNICODE_CODEPOINT_RANGE
 
 typedef struct codePointRange{
-  uint64_t start;
-  uint64_t end;
+  uint32_t start;
+  uint32_t end;
 } cpRange_t;
 
 #endif /*UNICODE_CODEPOINT_RANGE*/
@@ -102,6 +102,8 @@ const static cpRange_t SSP_PLANE[] = {
   {0xE0100, 0xE01EF}
   //The rest of code points are not allocated
 };
+
+const static uint32_t MAX_CODE_POINT = 0x10FFFF;
 
 //Planes F and 10 are for private use
 

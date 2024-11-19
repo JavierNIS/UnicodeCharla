@@ -38,7 +38,7 @@ UTF32toUTF8(const charUTF32_t* src, charUTF8_t* dest, conversionInfo_t* conver, 
   if(u8_cp_length > max)
     u8_cp_length = 0;
 
-  charUTF32_t srcBE = *dest;
+  charUTF32_t srcBE = *src;
   if(conver->_endianness == LITTLE_ENDIAN)
     SwapEndiannessU32(&srcBE);
 
