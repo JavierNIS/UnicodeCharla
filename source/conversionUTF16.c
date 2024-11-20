@@ -8,6 +8,7 @@ SwapEndiannessU16(charUTF16_t* src){
   src[1] = auxiliar;
 }
 
+//TESTED
 mbsize_t 
 CharLength16(const charUTF16_t* src, conversionInfo_t* conver){
   if(src == 0 || conver->_state == BAD)
@@ -77,6 +78,7 @@ UTF16toUTF8(const charUTF16_t* src, charUTF8_t* dest, conversionInfo_t* conver, 
   return u16_cp_size;
 }
 
+//TESTED
 mbsize_t 
 UTF16toUTF32(const charUTF16_t* src, charUTF32_t* dest, conversionInfo_t* conver, const mbsize_t max){
   if(src == 0 || dest == 0 || conver->_state == BAD)

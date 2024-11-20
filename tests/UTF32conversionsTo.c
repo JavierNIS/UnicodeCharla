@@ -7,7 +7,7 @@
 const static mbsize_t num_mb = 4;
 const static mbsize_t num_utf16_surr = 2;
 
-void TestALLCodePoints(charUTF8_t* utf8){
+void TestALLCodePoints(void){
   char cexit = 'n';
   conversionInfo_t conver; 
   Initialize(&conver);
@@ -17,6 +17,7 @@ void TestALLCodePoints(charUTF8_t* utf8){
       continue;
     charUTF32_t utf32;
     charUTF16_t utf16[num_utf16_surr];
+    charUTF8_t utf8[num_mb];
     utf32 = (charUTF32_t)code_point;
     printf("Code point: %u\n", utf32);
     UTF32toUTF8(&utf32, utf8, &conver, num_mb);
@@ -65,7 +66,6 @@ void TestALLCodePoints(charUTF8_t* utf8){
 
 
 int main(int argc, char *argv[]){
-  charUTF8_t utf8_test[4] = "";
-  TestALLCodePoints(utf8_test);
+  TestALLCodePoints();
   return 0;
 }

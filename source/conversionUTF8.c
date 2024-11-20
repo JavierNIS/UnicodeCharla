@@ -1,5 +1,6 @@
 #include "UTF8.h"
 
+//TESTED
 mbsize_t 
 CharLength(const charUTF8_t* src, conversionInfo_t* conver){
   if(src == 0 || conver->_state == BAD)
@@ -63,6 +64,7 @@ UTF8toUTF16(const charUTF8_t* src, charUTF16_t* dest, conversionInfo_t* conver, 
 
 ////////////////////////////////////////////////////////////////////////////////
 
+//TESTED
 mbsize_t 
 UTF8toUTF32(const charUTF8_t* src, charUTF32_t* dest, conversionInfo_t* conver, const mbsize_t max){
   if(dest == 0 || conver == 0 || 

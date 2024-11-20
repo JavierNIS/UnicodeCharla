@@ -21,6 +21,7 @@ UTF32bytesToUTF16(const charUTF32_t* src){
   return u16_cp_length;
 }
 
+//NOT TESTED YET
 void
 SwapEndiannessU32(charUTF32_t* src){
   charUTF32_t auxiliar = *src;
