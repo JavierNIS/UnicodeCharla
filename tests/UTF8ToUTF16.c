@@ -25,7 +25,7 @@ void TestAllCodePoints(void){
       exit(-1);
     }
     printf("UTF8: %s\n", utf8);
-    UTF8toUTF16(utf8, utf16, &conver, num_utf16_surr);
+    UTF8toUTF16(utf8, utf16, &conver, num_mb);
     if(!conver._state){
       printf("Error in conversion from utf8 to utf16\n");
       exit(-1);
@@ -41,7 +41,7 @@ void TestAllCodePoints(void){
       exit(-1);
     }
     else if(utf32 != code_point){
-      printf("Error in conversion. Code points are not equal");
+      printf("Error in conversion. Code points are not equal\n");
       exit(-1);
     }
   }

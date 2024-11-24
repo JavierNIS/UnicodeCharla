@@ -8,7 +8,6 @@ const static mbsize_t num_mb = 4;
 const static mbsize_t num_utf16_surr = 2;
 
 void TestALLCodePoints(void){
-  char cexit = 'n';
   conversionInfo_t conver; 
   Initialize(&conver);
   for(uint32_t code_point = 0; code_point <= SSP_PLANE[1].end;
@@ -32,15 +31,6 @@ void TestALLCodePoints(void){
       exit(-1);
     }
     printf("UTF16: %X %X\n\n", utf16[0], utf16[1%num_utf16_surr]);
-    if(code_point == BMP_PLANE[1].end || code_point == 0x7F){
-      do{
-        printf("Continue? [y/n]: ");
-        scanf("%c", &cexit);
-      }while(cexit != 'y' && cexit != 'n');
-      if(cexit == 'n'){
-        exit(0);
-      }
-    }
     UTF8toUTF32(utf8, &utf32, &conver, num_mb);
     if(!conver._state){
       printf("Error in conversion from utf8 to utf32\n");
