@@ -57,5 +57,6 @@ void TestALLCodePoints(void){
 
 int main(int argc, char *argv[]){
   TestALLCodePoints();
+  printf("Test successful\n");
   return 0;
 }

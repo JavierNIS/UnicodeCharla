@@ -35,28 +35,34 @@ UTF8toUTF16(const charUTF8_t* src, charUTF16_t* dest, conversionInfo_t* conver, 
       SetError(conver, (void*)src);
       break;
     case 1:
-        *dest = *src;
+      *dest = *src;
       break;
     case 2:
-        *dest = ((src[1] & 0x3F) |
-            (src[0] & 0x1F) << 6);
+      *dest = ((src[1] & 0x3F) |
+          (src[0] & 0x1F) << 6);
       break;
     case 3:
-        *dest = ((src[2] & 0x3F) | 
-            (src[1] & 0x3F) << 6 | 
-            (src[0] & 0x0F) << 12);
+      *dest = ((src[2] & 0x3F) | 
+          (src[1] & 0x3F) << 6 | 
+          (src[0] & 0x0F) << 12);
       break;
     case 4:
-        dest[1] = ( 0xDC00 | 
-            (src[3] & 0x3F) | 
-            (src[2] & 0x0F) << 6);
-        dest[0] = ( 0xD800 | 
-            (src[2] & 0x30) >> 4 | 
-            ((src[1] -0x10) & 0x3F) << 2 | 
-            (src[0] & 0x07) << 8);
+      {}
+      charUTF32_t code_point =
+        ((src[0] & 0x7) << 18) + ((src[1] & 0x3F) << 12) +
+        ((src[2] & 0x3F) << 6) + (src[3] & 0x3F) - 0x10000;
+      dest[0] = (0xD800 | ((code_point >> 10)));
+      dest[1] = (0xDC00 | ((code_point & 0x3FF)));
+      /*dest[0] = ( 0xD800 | 
+          (src[2] & 0x30) >> 4 | 
+          ((src[1] -0x10) & 0x3F) << 2 | 
+          (src[0] & 0x07) << 7);
+      dest[1] = ( 0xDC00 | 
+          (src[3] & 0x3F) | 
+          (src[2] & 0x0F) << 6);*/
 
-        if(conver->_endianness == LITTLE_ENDIAN)
-          SwapEndiannessU16(dest);
+      if(conver->_endianness == LITTLE_ENDIAN)
+        SwapEndiannessU16(dest);
       break;
   }
   return u8_cp_size;

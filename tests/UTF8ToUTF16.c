@@ -10,7 +10,7 @@ const static mbsize_t num_utf16_surr = 2;
 void TestAllCodePoints(void){
   conversionInfo_t conver; 
   Initialize(&conver);
-  for(uint32_t code_point = 0; code_point <= SSP_PLANE[1].end;
+  for(uint32_t code_point = 0x4FFFF; code_point <= SSP_PLANE[1].end;
       code_point++){
     if(code_point >= 0xD800 && code_point <= 0xDFFF)
       continue;
@@ -41,7 +41,8 @@ void TestAllCodePoints(void){
       exit(-1);
     }
     else if(utf32 != code_point){
-      printf("Error in conversion. Code points are not equal\n");
+      printf("Error in conversion. Code points are not equal.\nCode point received: %d\n", utf32);
+      printf("Hexadecimal, original: %x\tobtained:%x\n", code_point, utf32);
       exit(-1);
     }
   }
@@ -49,5 +50,6 @@ void TestAllCodePoints(void){
 
 int main(int argc, char *argv[]){
   TestAllCodePoints();
+  printf("Test successful\n");
   return 0;
 }

@@ -64,13 +64,20 @@ UTF16toUTF8(const charUTF16_t* src, charUTF8_t* dest, conversionInfo_t* conver, 
       charUTF16_t srcBE[2] = {src[0], src[1]};
       if(conver->_endianness == LITTLE_ENDIAN)
         SwapEndiannessU16(srcBE);
-      uint8_t conversion_auxiliar = (srcBE[0] & 0x03C) + 1;
+      
+      /*uint8_t conversion_auxiliar = ((srcBE[0] & 0x03C0)>>6) + 1;
       dest[0] = (0xF0 | (conversion_auxiliar & 0x1C));
       dest[1] = (0x80 | ((conversion_auxiliar & 0x03) << 4));
       dest[1] = (dest[1] | (srcBE[0] & 0x3C));
       dest[2] = (0x80 | ((srcBE[0] & 0x3) << 4));
       dest[2] = (dest[2] | ((srcBE[1] & 0x03C0) >> 6));
-      dest[3] = (0x80 | (srcBE[1] & 0x3F));
+      dest[3] = (0x80 | (srcBE[1] & 0x3F));*/
+
+      uint32_t code_point = ((srcBE[0] & 0x3FF) << 10) + (srcBE[1] & 0x3FF) + 0x10000;
+      dest[0] = (0xF0 | ((code_point >> 18) & 0x7));
+      dest[1] = (0x80 | ((code_point >> 12) & 0x3F));
+      dest[2] = (0x80 | ((code_point >> 6) & 0x3F));
+      dest[3] = (0x80 | (code_point & 0x3F));
       break;
     default:
       SetError(conver, (void*)src);

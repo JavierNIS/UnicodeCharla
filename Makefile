@@ -8,7 +8,7 @@ OBJ_D = ./objects/
 
 #Compiler options
 COMP = gcc
-CXXFLAGS = -std=c11 -Wall -pedantic -I$(HEADER_D)
+CXXFLAGS = -g -std=c11 -Wall -pedantic -I$(HEADER_D)
 
 #Tests
 T1 = InputCharacter
